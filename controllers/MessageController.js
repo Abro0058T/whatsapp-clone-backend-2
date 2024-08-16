@@ -175,11 +175,12 @@ export const getInitialContactWithMessages = async (req, res, next)  => {
                     createdAt,
                     senderId,
                     recieverId,
+                    
                 };
                 if(isSender) {
                     user = {
                         ...user,
-                        ...msg.reciever.totalUnreadMessages=0,
+                        ...msg.reciever,totalUnreadMessages:0,
                     };
                 }
                 else {
