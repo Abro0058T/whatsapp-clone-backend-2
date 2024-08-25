@@ -22,6 +22,11 @@ app.use("/uploads/images", express.static("uploads/images"));
 app.use("/api/auth", AuthRoutes);
 app.use("/api/messages", MessageRoutes);
 
+app.get("/healthcheck",(req,res)=>{
+  console.log("server is runnnign ")
+  res.send("Server is up and running")
+})
+
 const server = app.listen(process.env.PORT, () => {
   console.log(`Server started on port ${process.env.PORT}`);
 });
@@ -35,7 +40,17 @@ io.on("connection", (socket) => {
   socket.on("add-user", (userId) => {
     console.log(userId, socket.id, "socket id add");
     onlineUsers.set(userId, socket.id);
+    socket.broadcast.emit("online-users",{
+      onlineUsers: Array.from(onlineUsers.keys())})
   });
+
+
+  socket.on("signout", (id) => {
+    onlineUsers.delete(id);
+    socket.broadcast.emit("online-users",{
+      onlineUsers: Array.from(onlineUsers.keys())
+    })
+  })
   socket.on("send-msg", (data) => {
     const sendUserSocket = onlineUsers.get(data.to);
     console.log(onlineUsers);
@@ -82,7 +97,6 @@ io.on("connection", (socket) => {
   socket.on("accept-incoming-call",({id})=>{
     const sendUserSocket = onlineUsers.get(id);
         socket.to(sendUserSocket).emit("accept-call");
-
   })
 
 });
