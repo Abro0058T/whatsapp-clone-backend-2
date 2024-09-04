@@ -31,7 +31,7 @@ const server = app.listen(process.env.PORT, () => {
   console.log(`Server started on port ${process.env.PORT}`);
 });
 
-const io = new Server(server, { cors: { origin: "http://localhost:3000" } });
+const io = new Server(server, { cors: { origin: "https://vercel.com/abro0058ts-projects/whatsapp-clone-2/6zU4XsT7F7RzQtWrC6EwXtxRe5id" } });
 
 global.onlineUsers = new Map();
 
